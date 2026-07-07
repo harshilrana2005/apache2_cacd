@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NUMBER SEVEN — Relentless</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B0B0C;
+    --ink-2:#131315;
+    --crimson:#C8102E;
+    --crimson-dim:#7a0a1c;
+    --gold:#D4AF37;
+    --bone:#F5F3EE;
+    --steel:#57565C;
+    --steel-dim:#8a898f;
+    --line: rgba(245,243,238,0.12);
+
+    --display: 'Anton', sans-serif;
+    --body: 'Archivo', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ink);
+    color:var(--bone);
+    font-family:var(--body);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--crimson); color:var(--bone); }
+
+  a{color:inherit; text-decoration:none;}
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 32px; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; }
+  }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 32px;
+    mix-blend-mode:difference;
+  }
+  .brandmark{
+    font-family:var(--display);
+    font-size:22px; letter-spacing:0.06em;
+    display:flex; align-items:center; gap:10px;
+  }
+  .brandmark .num{ color:var(--crimson); mix-blend-mode:normal; }
+  .navlinks{ display:flex; gap:36px; font-size:13px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; }
+  .navlinks a{ opacity:0.8; transition:opacity .2s ease; }
+  .navlinks a:hover{ opacity:1; }
+  .navlinks a:focus-visible, a:focus-visible, button:focus-visible{
+    outline:2px solid var(--gold); outline-offset:3px;
+  }
+  @media (max-width:720px){ .navlinks{ display:none; } }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex; flex-direction:column; justify-content:flex-end;
+    padding:0 0 90px;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 0%, rgba(200,16,46,0.16), transparent 60%),
+      linear-gradient(180deg, var(--ink) 0%, #0e0e10 100%);
+    overflow:hidden;
+  }
+  .ghost-seven{
+    position:absolute;
+    top:-8vw; right:-6vw;
+    font-family:var(--display);
+    font-size:min(72vw, 900px);
+    line-height:1;
+    color:transparent;
+    -webkit-text-stroke:1.5px rgba(245,243,238,0.08);
+    user-select:none;
+    pointer-events:none;
+    z-index:0;
+    transform:translateY(0);
+    transition:transform .1s linear;
+  }
+  .hero-grid{
+    position:relative; z-index:1;
+    width:100%;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px; letter-spacing:0.22em; text-transform:uppercase;
+    color:var(--gold);
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:22px;
+  }
+  .eyebrow::before{
+    content:''; width:26px; height:1px; background:var(--gold);
+  }
+  h1.headline{
+    font-family:var(--display);
+    font-weight:400;
+    font-size:clamp(52px, 9.5vw, 148px);
+    line-height:0.86;
+    letter-spacing:0.005em;
+    text-transform:uppercase;
+    max-width:14ch;
+  }
+  h1.headline .line2{ color:var(--crimson); display:block; }
+  .hero-sub{
+    margin-top:28px;
+    max-width:520px;
+    font-size:17px;
+    line-height:1.6;
+    color:var(--steel-dim);
+  }
+  .hero-cta{ display:flex; gap:16px; margin-top:38px; flex-wrap:wrap; }
+  .btn{
+    font-family:var(--body); font-weight:700; font-size:13px;
+    letter-spacing:0.06em; text-transform:uppercase;
+    padding:16px 30px;
+    border-radius:2px;
+    cursor:pointer;
+    transition:transform .18s ease, background .18s ease, color .18s ease;
+    border:1px solid transparent;
+    display:inline-block;
+  }
+  .btn-primary{ background:var(--crimson); color:var(--bone); }
+  .btn-primary:hover{ transform:translateY(-2px); background:#e0122f; }
+  .btn-ghost{ border-color:var(--line); color:var(--bone); background:transparent; }
+  .btn-ghost:hover{ border-color:var(--bone); transform:translateY(-2px); }
+
+  .scroll-cue{
+    position:absolute; bottom:28px; left:32px; z-index:1;
+    font-family:var(--mono); font-size:11px; letter-spacing:0.15em;
+    color:var(--steel-dim); text-transform:uppercase;
+    display:flex; align-items:center; gap:10px;
+  }
+  .scroll-cue .bar{ width:1px; height:34px; background:linear-gradient(var(--gold), transparent); animation:pulse-bar 2s ease-in-out infinite; }
+  @keyframes pulse-bar{ 0%,100%{opacity:.3} 50%{opacity:1} }
+
+  /* ---------- TICKER ---------- */
+  .ticker{
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    background:var(--ink-2);
+    overflow:hidden;
+    white-space:nowrap;
+    padding:14px 0;
+  }
+  .ticker-track{
+    display:inline-block;
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--steel-dim);
+    animation:scroll-left 32s linear infinite;
+  }
+  .ticker-track span{ margin:0 26px; }
+  .ticker-track .dot{ color:var(--crimson); }
+  @keyframes scroll-left{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+
+  /* ---------- STATS ---------- */
+  .stats{
+    padding:100px 0 90px;
+    border-bottom:1px solid var(--line);
+  }
+  .stats-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    margin-bottom:56px; gap:20px; flex-wrap:wrap;
+  }
+  .section-label{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--gold);
+  }
+  .section-title{
+    font-family:var(--display); font-size:clamp(30px,4vw,46px);
+    text-transform:uppercase; line-height:1; margin-top:12px;
+  }
+  .stats-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--line);
+  }
+  .stat-cell{
+    background:var(--ink); padding:36px 28px;
+    transition:background .25s ease;
+  }
+  .stat-cell:hover{ background:var(--ink-2); }
+  .stat-num{
+    font-family:var(--mono); font-weight:700;
+    font-size:clamp(34px,4vw,54px);
+    color:var(--bone);
+    display:flex; align-items:baseline; gap:4px;
+  }
+  .stat-num .unit{ font-size:0.4em; color:var(--crimson); font-weight:600; }
+  .stat-label{
+    margin-top:10px; font-size:13px; color:var(--steel-dim);
+    text-transform:uppercase; letter-spacing:0.06em;
+  }
+  @media (max-width:860px){ .stats-grid{ grid-template-columns:repeat(2,1fr); } }
+
+  /* ---------- TIMELINE ---------- */
+  .timeline{ padding:100px 0; border-bottom:1px solid var(--line); }
+  .tl-list{ margin-top:56px; }
+  .tl-row{
+    display:grid; grid-template-columns:120px 1fr auto;
+    align-items:center; gap:24px;
+    padding:26px 0;
+    border-top:1px solid var(--line);
+    transition:padding-left .25s ease;
+  }
+  .tl-row:hover{ padding-left:12px; }
+  .tl-row:last-child{ border-bottom:1px solid var(--line); }
+  .tl-year{
+    font-family:var(--mono); font-weight:700; font-size:20px; color:var(--crimson);
+  }
+  .tl-text{ font-size:16px; color:var(--bone); }
+  .tl-text .tl-sub{ display:block; font-size:13px; color:var(--steel-dim); margin-top:4px; }
+  .tl-tag{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.1em;
+    text-transform:uppercase; color:var(--gold);
+    border:1px solid rgba(212,175,55,0.35);
+    padding:6px 12px; border-radius:2px; white-space:nowrap;
+  }
+  @media (max-width:640px){
+    .tl-row{ grid-template-columns:1fr; gap:8px; }
+    .tl-tag{ justify-self:flex-start; }
+  }
+
+  /* ---------- PHILOSOPHY ---------- */
+  .philosophy{
+    padding:110px 0; border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, transparent, rgba(200,16,46,0.05), transparent);
+  }
+  .phil-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:64px;
+    align-items:start;
+  }
+  .phil-quote{
+    font-family:var(--display); text-transform:uppercase;
+    font-size:clamp(28px,3.4vw,42px); line-height:1.12;
+  }
+  .phil-quote .accent{ color:var(--crimson); }
+  .phil-body p{ color:var(--steel-dim); font-size:16px; line-height:1.75; margin-bottom:18px; }
+  .phil-body strong{ color:var(--bone); font-weight:600; }
+  @media (max-width:860px){ .phil-grid{ grid-template-columns:1fr; gap:36px; } }
+
+  /* ---------- COLLABS ---------- */
+  .collabs{ padding:100px 0; border-bottom:1px solid var(--line); }
+  .collab-grid{
+    margin-top:52px;
+    display:grid; grid-template-columns:repeat(4,1fr);
+    border-left:1px solid var(--line); border-top:1px solid var(--line);
+  }
+  .collab-cell{
+    border-right:1px solid var(--line); border-bottom:1px solid var(--line);
+    padding:40px 20px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-size:14px; letter-spacing:0.08em;
+    color:var(--steel-dim); text-transform:uppercase;
+    min-height:110px; text-align:center;
+    transition:color .2s ease, background .2s ease;
+  }
+  .collab-cell:hover{ color:var(--bone); background:var(--ink-2); }
+  @media (max-width:760px){ .collab-grid{ grid-template-columns:repeat(2,1fr); } }
+
+  /* ---------- CTA / FOOTER ---------- */
+  .cta{
+    padding:130px 0 90px;
+    text-align:center;
+    position:relative;
+  }
+  .cta h2{
+    font-family:var(--display); text-transform:uppercase;
+    font-size:clamp(34px,6vw,80px); line-height:0.95;
+  }
+  .cta h2 .accent{ color:var(--crimson); }
+  .cta p{ margin:22px auto 0; max-width:480px; color:var(--steel-dim); font-size:16px; }
+  .cta .btn{ margin-top:38px; }
+
+  footer{
+    border-top:1px solid var(--line);
+    padding:34px 0;
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:var(--mono); font-size:12px; color:var(--steel-dim);
+    flex-wrap:wrap; gap:12px;
+  }
+  footer .fmark{ color:var(--gold); }
+
+  ::-webkit-scrollbar{ width:10px; }
+  ::-webkit-scrollbar-track{ background:var(--ink); }
+  ::-webkit-scrollbar-thumb{ background:var(--crimson-dim); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brandmark"><span class="num">Nº7</span>RELENTLESS</div>
+  <div class="navlinks">
+    <a href="#stats">Career</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#philosophy">Mentality</a>
+    <a href="#collabs">Partners</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="ghost-seven" id="ghostSeven">7</div>
+  <div class="wrap hero-grid">
+    <div class="eyebrow">Elite Striker &middot; Global Icon &middot; Est. Discipline</div>
+    <h1 class="headline">WORK IN<span class="line2">SILENCE.</span></h1>
+    <p class="hero-sub">Two decades of turning training-ground repetition into trophies. This is the record, the mindset, and the standard behind the number 7 — built one finish, one sprint, one sacrifice at a time.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#stats">See the record</a>
+      <a class="btn btn-ghost" href="#philosophy">The mentality</a>
+    </div>
+  </div>
+  <div class="scroll-cue"><div class="bar"></div>SCROLL</div>
+</header>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>5x BALLON D'OR FINALIST TIER FORM <span class="dot">&bull;</span></span>
+    <span>900+ CAREER GOALS <span class="dot">&bull;</span></span>
+    <span>4 CHAMPIONS LEAGUE TITLES <span class="dot">&bull;</span></span>
+    <span>1 EUROPEAN CHAMPIONSHIP <span class="dot">&bull;</span></span>
+    <span>200+ NATIONAL TEAM CAPS <span class="dot">&bull;</span></span>
+    <span>5x BALLON D'OR FINALIST TIER FORM <span class="dot">&bull;</span></span>
+    <span>900+ CAREER GOALS <span class="dot">&bull;</span></span>
+    <span>4 CHAMPIONS LEAGUE TITLES <span class="dot">&bull;</span></span>
+    <span>1 EUROPEAN CHAMPIONSHIP <span class="dot">&bull;</span></span>
+    <span>200+ NATIONAL TEAM CAPS <span class="dot">&bull;</span></span>
+  </div>
+</div>
+
+<section class="stats" id="stats">
+  <div class="wrap">
+    <div class="stats-head">
+      <div>
+        <div class="section-label">By the numbers</div>
+        <div class="section-title">The Record Speaks</div>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-cell">
+        <div class="stat-num">900<span class="unit">+</span></div>
+        <div class="stat-label">Career Goals</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">34<span class="unit">TR</span></div>
+        <div class="stat-label">Major Trophies</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">200<span class="unit">+</span></div>
+        <div class="stat-label">International Caps</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">20<span class="unit">YRS</span></div>
+        <div class="stat-label">At the Top</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="timeline" id="timeline">
+  <div class="wrap">
+    <div class="section-label">Milestones</div>
+    <div class="section-title">Two Decades, One Standard</div>
+    <div class="tl-list">
+      <div class="tl-row">
+        <div class="tl-year">'03</div>
+        <div class="tl-text">First senior break — thrown into the deep end at 18.<span class="tl-sub">Learned fast that talent without repetition goes nowhere.</span></div>
+        <div class="tl-tag">Origin</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-year">'08</div>
+        <div class="tl-text">First continental crown — a header that changed everything.<span class="tl-sub">Proof that hours in the gym translate to inches in the air.</span></div>
+        <div class="tl-tag">Breakthrough</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-year">'14</div>
+        <div class="tl-text">La Décima — the tenth title, chased for over a decade.<span class="tl-sub">The night the club's ghosts were finally quiet.</span></div>
+        <div class="tl-tag">Legacy</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-year">'16</div>
+        <div class="tl-text">A nation's first major trophy, delivered from the touchline in tears and in boots.<span class="tl-sub">Leadership isn't always about the goal you score.</span></div>
+        <div class="tl-tag">Country First</div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-year">'24</div>
+        <div class="tl-text">Still first to training, still last to leave.<span class="tl-sub">The standard was never about age — it was always about standards.</span></div>
+        <div class="tl-tag">Ongoing</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="philosophy" id="philosophy">
+  <div class="wrap phil-grid">
+    <div class="phil-quote">Talent without <span class="accent">work ethic</span> is just wasted potential.</div>
+    <div class="phil-body">
+      <p><strong>Discipline is the product.</strong> Every finish you see on a Saturday was rehearsed a thousand times on a Tuesday nobody was watching. The gym session before the gym session. The extra sprint after the whistle.</p>
+      <p><strong>Recovery is training.</strong> Sleep, diet, and physiotherapy aren't side notes to performance — they're the reason a body can still peak two decades into a career built on repetition.</p>
+      <p><strong>Pressure is a privilege.</strong> Big moments aren't feared, they're sought out. The standard doesn't lower because the stage gets bigger — it rises to meet it.</p>
+    </div>
+  </div>
+</section>
+
+<section class="collabs" id="collabs">
+  <div class="wrap">
+    <div class="section-label">In the circle</div>
+    <div class="section-title">Partners &amp; Ventures</div>
+    <div class="collab-grid">
+      <div class="collab-cell">Performance Footwear</div>
+      <div class="collab-cell">Fitness &amp; Gyms</div>
+      <div class="collab-cell">Fragrance Line</div>
+      <div class="collab-cell">Hospitality Group</div>
+      <div class="collab-cell">Underwear &amp; Basics</div>
+      <div class="collab-cell">Youth Academy</div>
+      <div class="collab-cell">Streaming Docuseries</div>
+      <div class="collab-cell">Wellness App</div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <h2>THE STANDARD<br>IS <span class="accent">NON-NEGOTIABLE.</span></h2>
+    <p>Follow the training, the mindset, and the next chapter of the number 7 story.</p>
+    <a class="btn btn-primary" href="#">Join the inner circle</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:12px;">
+    <span><span class="fmark">Nº7</span> RELENTLESS — Concept Site</span>
+    <span>Fictional brand concept, design study only</span>
+  </div>
+</footer>
+
+<script>
+  // Subtle parallax on the ghost "7" watermark
+  const ghost = document.getElementById('ghostSeven');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (ghost) ghost.style.transform = `translateY(${y * 0.12}px)`;
+  }, { passive: true });
+</script>
+
+</body>
+</html>
